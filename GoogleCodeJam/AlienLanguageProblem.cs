@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.Reflection;
 
 namespace GoogleCodeJam
 {
@@ -9,20 +11,26 @@ namespace GoogleCodeJam
     {
         public IEnumerable<string> Dictionary { get; set; }
         public string Word { get; set; }
+        public Func<string, bool> Filter { get; set; }
+
+        public string LogFile { get; set; }
 
         public AlienLanguageProblem(IEnumerable<string> dictionary, string word)
         {
             Dictionary = dictionary;
             Word = word;
+
+            LogFile = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            LogFile = string.Format("{0}Output\\logfile.log", LogFile.Remove(LogFile.IndexOf("bin")));
+            File.WriteAllText(LogFile, string.Empty);
         }
 
         public string Solve()
         {
-            IEnumerable<string> wordDefinition = AlienLanguageProblem.Parse(Word);
-            List<string> results = new List<string>();
-            _combinations(ref results, string.Empty, wordDefinition);
+            string[] wordDefinition = AlienLanguageProblem.Parse(Word).ToArray();
+            File.AppendAllText(LogFile, string.Format("{0}{1}", Word, Environment.NewLine));
 
-            var count = results.Count(r => Dictionary.Contains(r));
+            var count = _checkAgainstDefinition(wordDefinition);
             return count.ToString();
         }
 
@@ -57,7 +65,25 @@ namespace GoogleCodeJam
 
             return sets;
         }
-        private void _combinations(ref List<string> results, string output, IEnumerable<string> definition)
+
+        private int _checkAgainstDefinition(string[] definition)
+        {
+            int count = 0;
+            foreach (string word in Dictionary)
+                if (_checkAgainstDefinition(word, definition))
+                    count++;
+            return count;
+        }
+        private bool _checkAgainstDefinition(string word, string[] definition)
+        {
+            for (int i = 0; i < word.Length; i++)
+                if (!definition[i].Contains(word[i]))
+                    return false;
+            return true;
+        }
+
+        //Too slow
+        private void _combinations(ref List<string> results, string output, IEnumerable<string> definition, IEnumerable<string> dictionary)
         {
             if (definition.Count() == 0)
             {
@@ -65,10 +91,19 @@ namespace GoogleCodeJam
             }
             else
             {
+                string temp;
+                IEnumerable<string> newDictionary;
                 foreach (char c in definition.First())
                 {
-                    if (Dictionary.Any(w => w.StartsWith(output + c)))
-                        _combinations(ref results, output + c, definition.Skip(1));
+                    temp = output + c;
+                    newDictionary = dictionary.Where(w => w.StartsWith(temp));
+
+                    File.AppendAllText(LogFile, string.Format(" {0}  {1}{2}",
+                        newDictionary.Count().ToString().PadLeft(4), temp, Environment.NewLine));
+
+                    if (newDictionary.Count() > 0)
+                        _combinations(ref results, temp, definition.Skip(1), newDictionary);
+
                 }
             }
         }

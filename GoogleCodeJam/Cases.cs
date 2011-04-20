@@ -13,7 +13,11 @@ namespace GoogleCodeJam
         {
             StringBuilder builder = new StringBuilder();
             foreach (var c in CaseList)
+            {
+                Console.Write("  Solving Case #{0}:  ", c.Number.ToString().PadRight(2));
                 builder.AppendLine(c.Solve());
+                Console.WriteLine("Finished");
+            }
             return builder.ToString();
         }
     }

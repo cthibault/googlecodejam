@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace GoogleCodeJam
 {
@@ -12,23 +13,36 @@ namespace GoogleCodeJam
         static void Main(string[] args)
         {
             Stopwatch stopwatch = new Stopwatch();
-            string filePathPrefix = @"C:\Curtis\Applications\GoogleCodeJam\GoogleCodeJam\";
+            string filePathPrefix = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            filePathPrefix = filePathPrefix.Remove(filePathPrefix.IndexOf("bin"));
+
+            string sInputPrefix = @"Input\2009 - Qualification Round\A-small-practice.in";
+            string lInputPrefix = @"Input\2009 - Qualification Round\A-large-practice.in";
+            string sOutputPrefix = @"\Output\2009 - Qualification Round\A-small-practice.txt";
+            string lOutputPrefix = @"\Output\2009 - Qualification Round\A-large-practice.txt";
+            
+            bool useSmall = false;
+            string inputPrefix = sInputPrefix;
+            string outputPrefix = sOutputPrefix;
+
+            if (!useSmall)
+            {
+                inputPrefix = lInputPrefix;
+                outputPrefix = lOutputPrefix;
+            }
 
             stopwatch.Start();
-            var a = new AlienLanguageCases(filePathPrefix + @"Input\2009 - Qualification Round\A-large-practice.in");
+            var cases = new AlienLanguageCases(filePathPrefix + inputPrefix);
             stopwatch.Stop();
-            var assignment = stopwatch.Elapsed;
+            Console.WriteLine("Assignment: {0} seconds", stopwatch.Elapsed.TotalSeconds);
 
             stopwatch.Reset();
             stopwatch.Start();
-            File.WriteAllText(filePathPrefix + @"\Output\2009 - Qualification Round\A-large-practice.txt", a.Solve().TrimEnd(), Encoding.ASCII);
+            File.WriteAllText(filePathPrefix + outputPrefix, cases.Solve().TrimEnd(), Encoding.ASCII);
             stopwatch.Stop();
-
-            var solve = stopwatch.Elapsed;
-
-            //OUTPUT
-            Console.WriteLine("Assignment: {0} seconds", assignment.TotalSeconds);
-            Console.WriteLine("Solve: {0} seconds", solve.TotalSeconds);
+            Console.WriteLine("Solve: {0} seconds", stopwatch.Elapsed.TotalSeconds);
+            
+            
             Console.Read();            
         }
     }
