@@ -16,12 +16,15 @@ namespace GoogleCodeJam
             string filePathPrefix = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             filePathPrefix = filePathPrefix.Remove(filePathPrefix.IndexOf("bin"));
 
-            string sInputPrefix = @"Input\2009 - Qualification Round\A-small-practice.in";
-            string lInputPrefix = @"Input\2009 - Qualification Round\A-large-practice.in";
-            string sOutputPrefix = @"\Output\2009 - Qualification Round\A-small-practice.txt";
-            string lOutputPrefix = @"\Output\2009 - Qualification Round\A-large-practice.txt";
-            
-            bool useSmall = false;
+            string sInputPrefix = @"Input\2009 - Qualification Round\B-small-practice.in";
+            string lInputPrefix = @"Input\2009 - Qualification Round\B-large-practice.in";
+            string sOutputPrefix = @"\Output\2009 - Qualification Round\B-small-practice.txt";
+            string lOutputPrefix = @"\Output\2009 - Qualification Round\B-large-practice.txt";
+
+            sInputPrefix = @"\Input\test.txt";
+            sOutputPrefix = @"\Output\test.txt";
+
+            bool useSmall = true;
             string inputPrefix = sInputPrefix;
             string outputPrefix = sOutputPrefix;
 
@@ -32,7 +35,7 @@ namespace GoogleCodeJam
             }
 
             stopwatch.Start();
-            var cases = new AlienLanguageCases(filePathPrefix + inputPrefix);
+            var cases = new WatershedsCases(filePathPrefix + inputPrefix);
             stopwatch.Stop();
             Console.WriteLine("Assignment: {0} seconds", stopwatch.Elapsed.TotalSeconds);
 
