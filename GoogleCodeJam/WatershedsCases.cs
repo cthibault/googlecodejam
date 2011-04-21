@@ -15,14 +15,20 @@ namespace GoogleCodeJam
 
             int number = 0;
             List<int> gridDef;
-            List<List<int>> grid;
+            List<List<Watershed>> grid;
             for (int i = 1; i < lines.Count(); i++)
             {
                 gridDef = lines[i].Split(' ').ToList().ConvertAll(delegate(string n) { return int.Parse(n); });
                 
-                grid = new List<List<int>>();
+                grid = new List<List<Watershed>>();
                 for (int j = i + 1; j <= gridDef[0]+i; j++)
-                    grid.Add(lines[j].Split(' ').ToList().ConvertAll(delegate(string n) { return int.Parse(n); }));
+                    grid.Add(lines[j].Split(' ').ToList().ConvertAll(delegate(string n) 
+                    {
+                        return new Watershed()
+                        {
+                            Value = int.Parse(n)
+                        };
+                    }));
 
                 cases.Add(new Case<WatershedsProblem>(
                     ++number,
