@@ -21,14 +21,15 @@ namespace GoogleCodeJam
             string sOutputPrefix = @"\Output\2009 - Qualification Round\B-small-practice.txt";
             string lOutputPrefix = @"\Output\2009 - Qualification Round\B-large-practice.txt";
 
-            sInputPrefix = @"\Input\test.txt";
+            sInputPrefix = @"\Input\test.in";
             sOutputPrefix = @"\Output\test.txt";
 
-            bool useSmall = true;
             string inputPrefix = sInputPrefix;
             string outputPrefix = sOutputPrefix;
 
-            if (!useSmall)
+            Console.Write("Run the small input (y/n): ");
+            string input = Console.ReadLine();
+            if ((input != "Y") && (input != "y"))
             {
                 inputPrefix = lInputPrefix;
                 outputPrefix = lOutputPrefix;

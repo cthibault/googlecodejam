@@ -8,10 +8,16 @@ namespace GoogleCodeJam
 {
     public class Watershed
     {
+        public const char EMPTY_IDENTIFIER = ' ';
+
         public Point Coordinate { get; set; }
         public int Value { get; set; }
         public Point FlowCoordinate { get; set; }
         public char Identifier { get; set; }
+        public bool IsIdentified
+        {
+            get { return Identifier != EMPTY_IDENTIFIER; }
+        }
     }
     public class WatershedsProblem : IProblem
     {
@@ -30,7 +36,8 @@ namespace GoogleCodeJam
                     Grid.Add(new Watershed()
                     {
                         Coordinate = new Point(x, y),
-                        Value = grid[y][x]
+                        Value = grid[y][x],
+                        Identifier = Watershed.EMPTY_IDENTIFIER
                     });
         }
 
@@ -43,18 +50,18 @@ namespace GoogleCodeJam
             _identifyFlowDirections();
             
             //Flow Water from NorthWest corner
-
+            _flowWater(Grid.First(c => c.Coordinate == new Point(0, 0)), null);
 
             //Identify other sinks
-
+            _identifySinks();
 
             //Flow water from all squares
+            foreach (var c in Grid.Where(c => !c.IsIdentified))
+                _flowWater(c, null);
 
-
-            PrintGrid();
-            return "";
+            return _getOutput();
         }
-        public void PrintGrid()
+        public void PrettyPrintGrid()
         {
             foreach (var cell in Grid)
             {
@@ -80,6 +87,20 @@ namespace GoogleCodeJam
                 cell.FlowCoordinate = _getFlowCoordinate(cell, neighbors);
             }
         }
+        private void _identifySinks()
+        {
+            int yMin;
+            var sinks = Grid.Where(c => !c.IsIdentified && (c.FlowCoordinate == c.Coordinate));
+            while (sinks.Count() > 0)
+            {
+                yMin = sinks.Min(c => c.Coordinate.Y);
+                var cell = sinks.Where(c => c.Coordinate.Y == yMin).OrderBy(c => c.Coordinate.X).First();
+                cell.Identifier = IDENTIFIERS[CURRENT_IDENTIFIER_INDEX++];
+            }
+
+            //foreach (var c in Grid.Where(c => !c.IsIdentified && (c.FlowCoordinate == c.Coordinate)))
+            //    c.Identifier = IDENTIFIERS[CURRENT_IDENTIFIER_INDEX++];
+        }
         private IEnumerable<Point> _getNeighbors(Point point, int width, int height)
         {
             var neighbors = new List<Point>();
@@ -102,7 +123,10 @@ namespace GoogleCodeJam
         }
         private Point _getFlowCoordinate(Watershed cell, IEnumerable<Point> neighbors)
         {
-            int minValue = neighbors.Min(p => Grid.First(c => c.Coordinate == p).Value);
+            if (neighbors.Count() == 0)
+                return cell.Coordinate;
+
+            int minValue = neighbors.Min(p => Grid.FirstOrDefault(c => c.Coordinate == p).Value);
             if (minValue >= cell.Value)
                 return cell.Coordinate;
             
@@ -127,6 +151,40 @@ namespace GoogleCodeJam
                 return eligableNeighbors.First(p => p.Y == cell.Coordinate.Y + 1);
 
             return new Point(-1, -1);
+        }
+
+        private void _flowWater(Watershed newCell, Watershed oldCell)
+        {
+            if (oldCell == null)
+                _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
+            else if (!newCell.IsIdentified && oldCell.IsIdentified)
+            {
+                newCell.Identifier = oldCell.Identifier;
+                _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
+            }
+            else if (newCell.IsIdentified && !oldCell.IsIdentified)
+                oldCell.Identifier = newCell.Identifier;
+            else if (!newCell.IsIdentified && !oldCell.IsIdentified)
+            {
+                _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
+                oldCell.Identifier = newCell.Identifier;
+            }
+        }
+        private string _getOutput()
+        {
+            StringBuilder builder = new StringBuilder();
+            int height = Grid.Max(c => c.Coordinate.Y);
+            int width = Grid.Max(c => c.Coordinate.X);
+
+            for (int y = 0; y <= height; y++)
+            {
+                builder.AppendLine();
+                for (int x = 0; x <= width; x++)
+                    builder.Append(string.Format("{0}{1}",
+                        Grid.First(c => c.Coordinate == new Point(x, y)).Identifier,
+                        (x != width) ? " " : string.Empty));
+            }
+            return builder.ToString();
         }
     }
 }
