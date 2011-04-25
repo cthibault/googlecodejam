@@ -18,6 +18,10 @@ namespace GoogleCodeJam
         {
             get { return Identifier != EMPTY_IDENTIFIER; }
         }
+        public bool IsSink
+        {
+            get { return Coordinate.Equals(FlowCoordinate); }
+        }
     }
     public class WatershedsProblem : IProblem
     {
@@ -43,20 +47,11 @@ namespace GoogleCodeJam
 
         public string Solve()
         {
-            //Identify NorthWest corner: [0,0]
-            Grid.First(c => c.Coordinate == new Point(0,0)).Identifier = IDENTIFIERS[CURRENT_IDENTIFIER_INDEX++];
-
             //Identify Flow Directions
             _identifyFlowDirections();
-            
-            //Flow Water from NorthWest corner
-            _flowWater(Grid.First(c => c.Coordinate == new Point(0, 0)), null);
-
-            //Identify other sinks
-            _identifySinks();
 
             //Flow water from all squares
-            foreach (var c in Grid.Where(c => !c.IsIdentified))
+            foreach (var c in Grid)//.Where(c => !c.IsIdentified))
                 _flowWater(c, null);
 
             return _getOutput();
@@ -86,20 +81,6 @@ namespace GoogleCodeJam
                 neighbors = _getNeighbors(cell.Coordinate, gridWidth, gridHeight);
                 cell.FlowCoordinate = _getFlowCoordinate(cell, neighbors);
             }
-        }
-        private void _identifySinks()
-        {
-            int yMin;
-            var sinks = Grid.Where(c => !c.IsIdentified && (c.FlowCoordinate == c.Coordinate));
-            while (sinks.Count() > 0)
-            {
-                yMin = sinks.Min(c => c.Coordinate.Y);
-                var cell = sinks.Where(c => c.Coordinate.Y == yMin).OrderBy(c => c.Coordinate.X).First();
-                cell.Identifier = IDENTIFIERS[CURRENT_IDENTIFIER_INDEX++];
-            }
-
-            //foreach (var c in Grid.Where(c => !c.IsIdentified && (c.FlowCoordinate == c.Coordinate)))
-            //    c.Identifier = IDENTIFIERS[CURRENT_IDENTIFIER_INDEX++];
         }
         private IEnumerable<Point> _getNeighbors(Point point, int width, int height)
         {
@@ -157,18 +138,24 @@ namespace GoogleCodeJam
         {
             if (oldCell == null)
                 _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
+
+            else if (!newCell.IsIdentified && !oldCell.IsIdentified)
+            {
+                if (!oldCell.IsSink)
+                    _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
+                else
+                    oldCell.Identifier = IDENTIFIERS[CURRENT_IDENTIFIER_INDEX++];
+
+                oldCell.Identifier = newCell.Identifier;
+            }
             else if (!newCell.IsIdentified && oldCell.IsIdentified)
             {
                 newCell.Identifier = oldCell.Identifier;
-                _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
+                if (!newCell.IsSink)
+                    _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
             }
             else if (newCell.IsIdentified && !oldCell.IsIdentified)
                 oldCell.Identifier = newCell.Identifier;
-            else if (!newCell.IsIdentified && !oldCell.IsIdentified)
-            {
-                _flowWater(Grid.First(c => c.Coordinate == newCell.FlowCoordinate), newCell);
-                oldCell.Identifier = newCell.Identifier;
-            }
         }
         private string _getOutput()
         {

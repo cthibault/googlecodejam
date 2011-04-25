@@ -21,8 +21,8 @@ namespace GoogleCodeJam
             string sOutputPrefix = @"\Output\2009 - Qualification Round\B-small-practice.txt";
             string lOutputPrefix = @"\Output\2009 - Qualification Round\B-large-practice.txt";
 
-            sInputPrefix = @"\Input\test.in";
-            sOutputPrefix = @"\Output\test.txt";
+            //sInputPrefix = @"\Input\test.in";
+            //sOutputPrefix = @"\Output\test.txt";
 
             string inputPrefix = sInputPrefix;
             string outputPrefix = sOutputPrefix;

@@ -1,27 +1,18 @@
 Case #1: 
-a a a a c c c c c c c c
-a a a b c c c c c c d d
-a a a a c c c c c c d d
-f a a a c c c c c c d j
-f e g g h h c h i i i j
-f f g g h h h h i i i j
-f f g g g h h h i i i j
+a b b
+a a b
+a a a
 Case #2: 
-a a a a
-a a a a
-a a b b
-b b b b
+a a a a a a a a a b
 Case #3: 
-a a
-b a
+a a a
+b b b
 Case #4: 
 a a a a a
-a a a a a
-a a a a a
-a a a a a
-a a a a a
-a a a a a
-a a a a a
+a a b b a
+a b b b a
+a b b b a
 a a a a a
 Case #5: 
-a a a a a a a a a b
+a b c d e f g h i j k l m
+n o p q r s t u v w x y z
