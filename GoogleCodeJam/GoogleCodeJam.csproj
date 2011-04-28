@@ -44,21 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlienLanguageCases.cs" />
-    <Compile Include="AlienLanguageProblem.cs" />
-    <Compile Include="Case.cs" />
-    <Compile Include="Cases.cs" />
-    <Compile Include="IProblem.cs" />
+    <Compile Include="QuickSolutions\AlienLanguage.cs" />
+    <Compile Include="QuickSolutions\Rotate.cs" />
+    <Compile Include="Solutions\AlienLanguageCases.cs" />
+    <Compile Include="Solutions\AlienLanguageProblem.cs" />
+    <Compile Include="Common\Case.cs" />
+    <Compile Include="Common\Cases.cs" />
+    <Compile Include="Common\IProblem.cs" />
+    <Compile Include="Common\GoogleCodeJamProblemHarness.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReverseWordsCases.cs" />
-    <Compile Include="ReverseWordsProblem.cs" />
-    <Compile Include="StoreCreditCases.cs" />
-    <Compile Include="StoreCreditProblem.cs" />
-    <Compile Include="T9Cases.cs" />
-    <Compile Include="T9Problem.cs" />
-    <Compile Include="WatershedsCases.cs" />
-    <Compile Include="WatershedsProblem.cs" />
+    <Compile Include="Solutions\ReverseWordsCases.cs" />
+    <Compile Include="Solutions\ReverseWordsProblem.cs" />
+    <Compile Include="Solutions\StoreCreditCases.cs" />
+    <Compile Include="Solutions\StoreCreditProblem.cs" />
+    <Compile Include="Solutions\T9Cases.cs" />
+    <Compile Include="Solutions\T9Problem.cs" />
+    <Compile Include="Solutions\WatershedsCases.cs" />
+    <Compile Include="Solutions\WatershedsProblem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
