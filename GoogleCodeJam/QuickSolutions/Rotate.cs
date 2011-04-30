@@ -68,7 +68,27 @@ namespace GoogleCodeJam.QuickSolutions.Rotate
 
         public string Solve()
         {
+            //PrettyPrintGrid();
+            _rotateClockwise();
             return string.Empty;
+        }
+        public void PrettyPrintGrid()
+        {
+            Console.WriteLine();
+            Grid.ForEach(line => Console.WriteLine(line));
+        }
+
+        private void _rotateClockwise()
+        {
+            List<string> newGrid = new List<string>();
+            int length = Grid.First().Length;
+            for (int i = 0; i < length; i++)
+                newGrid.Add(string.Concat(Grid.Select(l => l[i]).Reverse()));
+
+            PrettyPrintGrid();
+            Console.WriteLine();
+            Grid = newGrid;
+            PrettyPrintGrid();
         }
     }
     #endregion Specific Classes
